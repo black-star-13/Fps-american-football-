@@ -1,0 +1,29 @@
+let isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let touchStartX = 0, touchStartY = 0;
+
+if (isMobile) {
+  document.body.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    shootFootball();
+  });
+
+  document.body.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+
+    camera.rotation.y -= deltaX * 0.002;
+    camera.rotation.x -= deltaY * 0.002;
+    camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  });
+} else {
+  document.body.addEventListener('click', () => {
+    controls.lock();
+    shootFootball();
+  });
+}
